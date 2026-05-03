@@ -2,27 +2,32 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const fs = require('fs');
+const serverless = require('serverless-http');
 
 const app = express();
 const PORT = 3002;
 const ADMIN_PASSWORD = 'physio@123';
 const ADMIN_COOKIE = 'physio_admin_session';
 const adminSessions = new Set();
+const rootDir = path.join(__dirname, '..');
+const publicDir = path.join(rootDir, 'public');
+const viewsDir = path.join(rootDir, 'views');
+const dataDir = path.join(rootDir, 'data');
 
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(publicDir));
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', viewsDir);
 
 // Data file paths
-const appointmentsFile = path.join(__dirname, 'data', 'appointments.json');
+const appointmentsFile = path.join(dataDir, 'appointments.json');
 
 // Initialize data directory and file
 function initializeData() {
-  if (!fs.existsSync(path.join(__dirname, 'data'))) {
-    fs.mkdirSync(path.join(__dirname, 'data'), { recursive: true });
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true });
   }
   if (!fs.existsSync(appointmentsFile)) {
     fs.writeFileSync(appointmentsFile, JSON.stringify([], null, 2));
@@ -108,8 +113,8 @@ const pageMeta = {
 
 // Custom render function to handle layout + page content
 function renderPage(res, pageName, pageKey = 'home') {
-  const pageContent = fs.readFileSync(path.join(__dirname, 'views', pageName + '.ejs'), 'utf-8');
-  const layoutContent = fs.readFileSync(path.join(__dirname, 'views', 'layout.ejs'), 'utf-8');
+  const pageContent = fs.readFileSync(path.join(viewsDir, pageName + '.ejs'), 'utf-8');
+  const layoutContent = fs.readFileSync(path.join(viewsDir, 'layout.ejs'), 'utf-8');
   const meta = pageMeta[pageKey] || pageMeta.home;
   const ogImage = 'https://virtualphysio.ca/images/drashti-chauhan-virtual-physiotherapist.png';
   const finalContent = layoutContent
@@ -300,10 +305,10 @@ app.get('/api/appointments', (req, res) => {
   }
 });
 
-if (require.main === module) {
+if (require.main === module && !process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
   });
 }
 
-module.exports = app;
+module.exports = serverless(app);
