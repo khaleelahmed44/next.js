@@ -2,10 +2,10 @@
   "name": "virtual-physio-website",
   "version": "1.0.0",
   "description": "Professional Virtual Physiotherapy Website",
-  "main": "api/server.js",
+  "main": "api/index.js",
   "scripts": {
-    "start": "node api/server.js",
-    "dev": "node api/server.js"
+    "start": "node api/index.js",
+    "dev": "node api/index.js"
   },
   "keywords": [
     "physiotherapy",
