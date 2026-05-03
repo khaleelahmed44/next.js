@@ -1,0 +1,149 @@
+<!-- Hero Section -->
+<section class="hero" style="background: linear-gradient(135deg, #004a99, #003d7a); padding: 3rem 2rem;">
+  <div class="hero-content">
+    <h1>Book your online physiotherapy appointment in under one minute.</h1>
+    <p>Fast mobile booking for virtual physiotherapy, pelvic floor care, sports injury rehab, in-home treatment in Ottawa and person-to-person appointments.</p>
+  </div>
+</section>
+
+<!-- Booking Form -->
+<section class="container" style="padding: 4rem 0;">
+  <div style="max-width: 600px; margin: 0 auto;">
+    <div id="alert-container"></div>
+    
+    <form id="bookingForm" class="card" style="box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+      <h2 style="margin-bottom: 0.5rem; color: var(--primary);">Appointment Details</h2>
+      <p style="color: var(--text-light); margin-bottom: 2rem;">Fill out the form below and we'll confirm your booking by phone, email or WhatsApp.</p>
+
+      <div class="form-group">
+        <label for="name">Full Name *</label>
+        <input type="text" id="name" name="name" required placeholder="John Doe">
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone Number *</label>
+        <input type="tel" id="phone" name="phone" required placeholder="+1 343 204 0699">
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" placeholder="name@example.com">
+      </div>
+
+      <div class="form-group">
+        <label for="service">Service Selection *</label>
+        <select id="service" name="service" required>
+          <option value="">Select a service</option>
+          <option value="Physiotherapy">Physiotherapy</option>
+          <option value="Physiotherapy Subsequent Treatment">Physiotherapy Subsequent Treatment</option>
+          <option value="Physiotherapy Extended Treatment">Physiotherapy Extended Treatment</option>
+          <option value="In-Home Treatment">In-Home Treatment</option>
+          <option value="Pelvic Floor Physiotherapy">Pelvic Floor Physiotherapy</option>
+          <option value="Post-Surgery Rehab">Post-Surgery Rehab</option>
+          <option value="Sports Injury Care">Sports Injury Care</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="date">Preferred Date *</label>
+        <input type="date" id="date" name="date" required>
+      </div>
+
+      <div class="form-group">
+        <label for="time">Preferred Time *</label>
+        <select id="time" name="time" required>
+          <option value="">Select a time</option>
+          <option value="9:00 AM">9:00 AM</option>
+          <option value="9:30 AM">9:30 AM</option>
+          <option value="10:00 AM">10:00 AM</option>
+          <option value="10:30 AM">10:30 AM</option>
+          <option value="11:00 AM">11:00 AM</option>
+          <option value="11:30 AM">11:30 AM</option>
+          <option value="2:00 PM">2:00 PM</option>
+          <option value="2:30 PM">2:30 PM</option>
+          <option value="3:00 PM">3:00 PM</option>
+          <option value="3:30 PM">3:30 PM</option>
+          <option value="4:00 PM">4:00 PM</option>
+          <option value="4:30 PM">4:30 PM</option>
+          <option value="5:00 PM">5:00 PM</option>
+          <option value="5:30 PM">5:30 PM</option>
+          <option value="6:00 PM">6:00 PM</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="message">Describe your problem or symptoms</label>
+        <textarea id="message" name="message" rows="4" placeholder="Please briefly explain your pain, discomfort, or issue."></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1.1rem;" data-track="book_appointment_hero">
+        Book Appointment Now
+      </button>
+
+      <p style="text-align: center; color: var(--text-light); font-size: 0.9rem; margin-top: 1rem;">
+        Your information is 100% secure.
+      </p>
+    </form>
+
+    <!-- Booking Steps -->
+    <div style="margin-top: 4rem;">
+      <h3 style="color: var(--primary); margin-bottom: 2rem; text-align: center;">How It Works</h3>
+      <div class="grid grid-3" style="gap: 1rem;">
+        <div style="text-align: center; padding: 1.5rem; background: var(--primary-light); border-radius: 0.5rem;">
+          <div style="font-size: 2rem; color: var(--primary); font-weight: bold; margin-bottom: 0.5rem;">1</div>
+          <p><strong>Book</strong><br>Fill out your details</p>
+        </div>
+        <div style="text-align: center; padding: 1.5rem; background: var(--primary-light); border-radius: 0.5rem;">
+          <div style="font-size: 2rem; color: var(--primary); font-weight: bold; margin-bottom: 0.5rem;">2</div>
+          <p><strong>Confirm</strong><br>Receive email confirmation</p>
+        </div>
+        <div style="text-align: center; padding: 1.5rem; background: var(--primary-light); border-radius: 0.5rem;">
+          <div style="font-size: 2rem; color: var(--primary); font-weight: bold; margin-bottom: 0.5rem;">3</div>
+          <p><strong>Connect</strong><br>Join your video session</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+document.getElementById('bookingForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const formData = {
+    name: document.getElementById('name').value,
+    phone: document.getElementById('phone').value,
+    email: document.getElementById('email').value,
+    service: document.getElementById('service').value,
+    date: document.getElementById('date').value,
+    time: document.getElementById('time').value,
+    message: document.getElementById('message').value,
+  };
+
+  try {
+    const response = await fetch('/api/book-appointment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+    });
+
+    const result = await response.json();
+    const alertContainer = document.getElementById('alert-container');
+
+    if (result.success) {
+      alertContainer.innerHTML = '<div class="alert alert-success">✓ Appointment booked successfully! Check your email for confirmation.</div>';
+      document.getElementById('bookingForm').reset();
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 2000);
+    } else {
+      alertContainer.innerHTML = `<div class="alert alert-error">✗ Error: ${result.message}</div>`;
+    }
+  } catch (error) {
+    document.getElementById('alert-container').innerHTML = '<div class="alert alert-error">✗ Error submitting form. Please try again.</div>';
+  }
+});
+
+// Set minimum date to today
+document.getElementById('date').min = new Date().toISOString().split('T')[0];
+</script>

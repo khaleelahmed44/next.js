@@ -1,0 +1,172 @@
+<!-- Admin Dashboard -->
+<section style="background: #f3f4f6; min-height: 100vh; padding: 2rem 0;">
+  <div class="container" style="max-width: 1200px;">
+    <!-- Header -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; background: var(--white); padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+      <h1 style="color: var(--primary);">Admin Dashboard</h1>
+      <button onclick="logout()" class="btn" style="background: var(--danger); color: var(--white);">
+        Logout
+      </button>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-4" style="margin-bottom: 2rem;">
+      <div style="background: var(--white); padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); text-align: center; border-left: 4px solid var(--primary);">
+        <div style="font-size: 2rem; font-weight: bold; color: var(--primary);" id="totalCount">0</div>
+        <p style="color: var(--text-light); margin-top: 0.5rem;">Total Bookings</p>
+      </div>
+      <div style="background: var(--white); padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); text-align: center; border-left: 4px solid var(--warning);">
+        <div style="font-size: 2rem; font-weight: bold; color: var(--warning);" id="pendingCount">0</div>
+        <p style="color: var(--text-light); margin-top: 0.5rem;">Pending</p>
+      </div>
+      <div style="background: var(--white); padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); text-align: center; border-left: 4px solid var(--success);">
+        <div style="font-size: 2rem; font-weight: bold; color: var(--success);" id="confirmedCount">0</div>
+        <p style="color: var(--text-light); margin-top: 0.5rem;">Confirmed</p>
+      </div>
+      <div style="background: var(--white); padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); text-align: center; border-left: 4px solid #8b5cf6;">
+        <div style="font-size: 2rem; font-weight: bold; color: #8b5cf6;" id="completedCount">0</div>
+        <p style="color: var(--text-light); margin-top: 0.5rem;">Completed</p>
+      </div>
+    </div>
+
+    <!-- Appointments Table -->
+    <div style="background: var(--white); border-radius: 0.75rem; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); overflow: hidden;">
+      <div style="padding: 1.5rem; border-bottom: 1px solid var(--border);">
+        <h2 style="color: var(--primary);">All Appointments</h2>
+      </div>
+      <div style="overflow-x: auto;">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Patient Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Condition</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="appointmentsBody">
+            <tr>
+              <td colspan="8" style="text-align: center; padding: 2rem; color: var(--text-light);">Loading appointments...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+let appointments = [];
+
+async function loadAppointments() {
+  try {
+    const response = await fetch('/api/appointments');
+    appointments = await response.json();
+    renderAppointments();
+    updateStats();
+  } catch (error) {
+    console.error('Error loading appointments:', error);
+  }
+}
+
+function renderAppointments() {
+  const body = document.getElementById('appointmentsBody');
+  
+  if (appointments.length === 0) {
+    body.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 2rem; color: var(--text-light);">No appointments yet</td></tr>';
+    return;
+  }
+
+  body.innerHTML = appointments.map(apt => `
+    <tr>
+      <td><strong>${apt.name}</strong></td>
+      <td>${apt.email}</td>
+      <td>${apt.phone}</td>
+      <td>${apt.service || apt.injury || ''}</td>
+      <td>${apt.date}</td>
+      <td>${apt.time}</td>
+      <td>
+        <select class="status-select" data-id="${apt.id}" onchange="updateStatus('${apt.id}', this.value)">
+          <option value="pending" ${apt.status === 'pending' ? 'selected' : ''}>Pending</option>
+          <option value="confirmed" ${apt.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+          <option value="completed" ${apt.status === 'completed' ? 'selected' : ''}>Completed</option>
+          <option value="cancelled" ${apt.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+        </select>
+      </td>
+      <td>
+        <button onclick="deleteAppointment('${apt.id}')" class="btn" style="background: var(--danger); color: var(--white); padding: 0.25rem 0.75rem; font-size: 0.85rem;">
+          Delete
+        </button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function updateStats() {
+  const stats = {
+    total: appointments.length,
+    pending: appointments.filter(a => a.status === 'pending').length,
+    confirmed: appointments.filter(a => a.status === 'confirmed').length,
+    completed: appointments.filter(a => a.status === 'completed').length,
+  };
+
+  document.getElementById('totalCount').textContent = stats.total;
+  document.getElementById('pendingCount').textContent = stats.pending;
+  document.getElementById('confirmedCount').textContent = stats.confirmed;
+  document.getElementById('completedCount').textContent = stats.completed;
+}
+
+async function updateStatus(id, status) {
+  try {
+    const response = await fetch('/api/update-appointment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, status }),
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      loadAppointments();
+    }
+  } catch (error) {
+    console.error('Error updating status:', error);
+  }
+}
+
+async function deleteAppointment(id) {
+  if (!confirm('Are you sure you want to delete this appointment?')) return;
+
+  try {
+    const response = await fetch('/api/delete-appointment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      loadAppointments();
+    }
+  } catch (error) {
+    console.error('Error deleting appointment:', error);
+  }
+}
+
+async function logout() {
+  try {
+    await fetch('/admin/logout', { method: 'POST' });
+  } catch (error) {
+    console.error('Logout failed:', error);
+  } finally {
+    window.location.href = '/admin';
+  }
+}
+
+// Load appointments on page load
+loadAppointments();
+setInterval(loadAppointments, 5000); // Refresh every 5 seconds
+</script>

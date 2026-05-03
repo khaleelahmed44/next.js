@@ -1,0 +1,110 @@
+<!-- Hero Section -->
+<section class="hero" style="background: linear-gradient(135deg, #004a99, #003d7a); padding: 3rem 2rem;">
+  <div class="hero-content">
+    <h1>Contact Virtual Physio.ca for online physiotherapy booking.</h1>
+    <p>Send your preferred service, date and message. We can follow up by phone, email or WhatsApp.</p>
+  </div>
+</section>
+
+<!-- Contact Information -->
+<section class="container" style="padding: 4rem 0;">
+  <div class="grid grid-2" style="gap: 3rem; margin-bottom: 3rem;">
+    <div>
+      <h2 style="margin-bottom: 2rem; color: var(--primary);">Get in Touch</h2>
+      
+      <div style="margin-bottom: 2rem;">
+        <h3 style="color: var(--text-dark); margin-bottom: 0.5rem;">📞 Phone</h3>
+        <p style="color: var(--text-light);">
+          <a href="tel:+13432040699" style="color: var(--primary); text-decoration: none; font-weight: 600;">+1 343 204 0699</a>
+        </p>
+      </div>
+
+      <div style="margin-bottom: 2rem;">
+        <h3 style="color: var(--text-dark); margin-bottom: 0.5rem;">📧 Email</h3>
+        <p style="color: var(--text-light);">
+          <a href="mailto:info@virtualphysio.ca" style="color: var(--primary); text-decoration: none; font-weight: 600;">info@virtualphysio.ca</a>
+        </p>
+      </div>
+
+      <div style="margin-bottom: 2rem;">
+        <h3 style="color: var(--text-dark); margin-bottom: 0.5rem;">⏰ Hours</h3>
+        <p style="color: var(--text-light);">
+          <strong>Monday-Saturday:</strong> 9:00 AM - 7:00 PM
+        </p>
+      </div>
+
+      <div>
+        <h3 style="color: var(--text-dark); margin-bottom: 0.5rem;">🌐 Follow Us</h3>
+        <p style="color: var(--text-light);">
+          <a href="#" style="color: var(--primary); text-decoration: none; margin-right: 1rem;">Facebook</a>
+          <a href="#" style="color: var(--primary); text-decoration: none; margin-right: 1rem;">Instagram</a>
+          <a href="#" style="color: var(--primary); text-decoration: none; margin-right: 1rem;">LinkedIn</a>
+          <a href="#" style="color: var(--primary); text-decoration: none;">Twitter</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Contact Form -->
+    <div class="card" style="box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+      <h3 style="margin-bottom: 1rem; color: var(--primary);">Send Appointment Request</h3>
+      <form id="contactForm">
+        <div class="form-group">
+          <label for="contactName">Name</label>
+          <input type="text" id="contactName" name="name" required placeholder="Your name">
+        </div>
+
+        <div class="form-group">
+          <label for="contactEmail">Email</label>
+          <input type="email" id="contactEmail" name="email" required placeholder="your@email.com">
+        </div>
+
+        <div class="form-group">
+          <label for="contactService">Service</label>
+          <select id="contactService" name="service">
+            <option value="">Select service</option>
+            <option>Physiotherapy</option>
+            <option>In-Home Treatment</option>
+            <option>Pelvic Floor Physiotherapy</option>
+            <option>Sports Injury Care</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="contactMessage">Message</label>
+          <textarea id="contactMessage" name="message" required placeholder="Your message here..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Send Appointment Request</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Map Section -->
+<section style="background: var(--primary-light); padding: 2rem 0;">
+  <div class="container">
+    <h3 style="text-align: center; color: var(--primary); margin-bottom: 2rem;">Our Location</h3>
+    <div style="background: var(--white); border-radius: 0.5rem; overflow: hidden; height: 300px; display: flex; align-items: center; justify-content: center; border: 2px dashed var(--primary);">
+      <p style="text-align: center; color: var(--text-light);">
+        Virtual care across Ottawa, and in-home treatment in Ottawa is available by request.
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+document.getElementById('contactForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const formData = {
+    name: document.getElementById('contactName').value,
+    email: document.getElementById('contactEmail').value,
+    service: document.getElementById('contactService').value,
+    message: document.getElementById('contactMessage').value,
+  };
+
+  // Simulated submission - in production, you'd send this to your backend
+  alert('Thank you for your message! We\'ll get back to you soon.');
+  document.getElementById('contactForm').reset();
+});
+</script>

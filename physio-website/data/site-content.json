@@ -1,0 +1,32 @@
+{
+  "site": {
+    "name": "Virtual Physio.ca",
+    "tagline": "Virtual & in-person physiotherapy for pain relief and confident recovery.",
+    "description": "Virtual and in-home physiotherapy care for pain relief, rehabilitation and confident movement.",
+    "url": "https://virtualphysio.ca",
+    "logo": "/images/virtual-physio-logo.png",
+    "themeColor": "#0077B6"
+  },
+  "contact": {
+    "phone": "+13432040699",
+    "phoneDisplay": "+1 343 204 0699",
+    "email": "info@virtualphysio.ca",
+    "whatsapp": "https://wa.me/13432040699",
+    "hours": "Monday-Saturday, 9:00 AM-7:00 PM"
+  },
+  "tracking": {
+    "events": [
+      "generate_lead",
+      "book_appointment_nav",
+      "book_appointment_hero",
+      "book_appointment_profile",
+      "call_hero",
+      "call_contact",
+      "call_booking",
+      "whatsapp_fab",
+      "whatsapp_booking",
+      "whatsapp_contact",
+      "booking_page_from_contact"
+    ]
+  }
+}

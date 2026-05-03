@@ -1,0 +1,60 @@
+<!-- Hero Section -->
+<section class="hero" style="background: linear-gradient(135deg, #004a99, #003d7a); padding: 3rem 2rem;">
+  <div class="hero-content">
+    <h1>Admin Login</h1>
+    <p>Access the appointment management dashboard</p>
+  </div>
+</section>
+
+<!-- Login Form -->
+<section class="container" style="padding: 4rem 0;">
+  <div style="max-width: 400px; margin: 0 auto;">
+    <div class="card" style="box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+      <h2 style="margin-bottom: 1rem; color: var(--primary); text-align: center;">Admin Dashboard</h2>
+      <p style="text-align: center; color: var(--text-light); margin-bottom: 2rem;">Enter your admin password to access bookings.</p>
+
+      <form id="adminLoginForm">
+        <div class="form-group">
+          <label for="adminPassword">Admin Password</label>
+          <input type="password" id="adminPassword" name="password" required placeholder="Enter password">
+        </div>
+
+        <div id="loginAlert"></div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem;">
+          Login
+        </button>
+      </form>
+
+      <p style="text-align: center; margin-top: 1.5rem;">
+        <a href="/" style="color: var(--primary); text-decoration: none;">Back to Home</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const password = document.getElementById('adminPassword').value;
+  
+  try {
+    const response = await fetch('/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      window.location.href = '/admin/dashboard';
+    } else {
+      document.getElementById('loginAlert').innerHTML = '<div class="alert alert-error" style="text-align: center;">Invalid password</div>';
+    }
+  } catch (error) {
+    document.getElementById('loginAlert').innerHTML = '<div class="alert alert-error" style="text-align: center;">Error logging in</div>';
+  }
+});
+</script>
